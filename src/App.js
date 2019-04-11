@@ -22,12 +22,12 @@ class App extends Component {
     // })
 
     // this.state = {rows: movieRows}
-    this.performSerch()
+    this.performSerch("ant man")
   }
 
-  performSerch() {
+  performSerch(searchTerm) {
     console.log("Perform search using moviedb")
-    const urlString ="https://api.themoviedb.org/3/search/movie?api_key=1f1b95c89a3439518717be62697c7775&query=avengers"
+    const urlString ="https://api.themoviedb.org/3/search/movie?api_key=1f1b95c89a3439518717be62697c7775&query=" + searchTerm
     $.ajax({
       url: urlString,
       success: (searchResults) => {
@@ -36,9 +36,17 @@ class App extends Component {
         const results = searchResults.results
         // console.log(results[0])
 
+        var movieRows = []
+
         results.forEach((movie) => {
+          movie.poster_src = "https://image.tmdb.org/t/p/w185" + movie.poster_path
+          console.log(movie.poster_path)
           console.log(movie.title)
+          const movieRow = <MovieRow key={movie.id} movie={movie} />
+          movieRows.push(movieRow)
         })
+
+        this.setState({rows: movieRows})
       },
       error: (xhr, status, err) =>{
         console.error("Failed to fetch data")
